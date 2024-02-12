@@ -2,9 +2,18 @@ package main
 
 import (
 	"fmt"
-	//"github.com/diskfs/go-diskfs"	
+	"os"
+	"os/exec"
+	//"github.com/diskfs/go-diskfs"
 )
 
-func main(){
-	fmt.Println("Hello world!")
+func ClearScr() {
+	c := exec.Command("clear")
+	c.Stdout = os.Stdout
+	c.Run()
+}
+
+func main() {
+	ClearScr()
+	fmt.Println("\033[1;32m>> \033[1;97mHello world!")
 }
