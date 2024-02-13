@@ -14,11 +14,10 @@ then
 fi
 
 echo -e "\e[32m==> \e[1;97mStarting up..."
-sleep 2
+
 if [[ $verbose == true ]]
 then
     echo -e "  \e[1;34m-> \e[97mLocating Go installation..."
-    sleep 2
 fi
 
 goinstall=$(which go)
@@ -34,7 +33,7 @@ fi
 if [[ $verbose == true ]]
 then
     echo -e "\e[1;32m==> \e[97mGo installation found."
-    sleep 0.5
+
     echo -e "  \e[1;34m-> \e[97mScanning disks."
 fi
 if [[ $verbose == true ]]
@@ -53,9 +52,21 @@ then
     echo -e "  \e[1;34m-> \e[97mLocating HDDs..."
 fi  
 
-ls /dev | grep "hd[a-z]"
+hdds=$(ls /dev | grep "hd[a-z]")
 
 if [[ $verbose == true ]]
 then
      echo -e "\e[1;32m==> \e[97mDone."
 fi  
+
+
+
+for i in $ssds
+do
+    echo $i
+done
+
+for i in $hdds
+do
+    echo $i
+done
