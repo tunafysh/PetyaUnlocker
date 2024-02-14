@@ -13,60 +13,62 @@ then
     exit 1
 fi
 
-echo -e "\e[32m==> \e[1;97mStarting up..."
+echo -e "\e[32m==> \e[1;97mStarting up..." 
+sleep 2
+echo -e "\e[34m-> \e[1;97mLooking for lsblk." 
+sleep 2
+lsblkinstall=$(which lsblk)
 
-if [[ $verbose == true ]]
+if [[ $lsblkinstall == "" ]]
 then
-    echo -e "  \e[1;34m-> \e[97mLocating Go installation..."
-fi
 
-goinstall=$(which go)
 
-if [[ $goinstall == "" ]]
-then
     if [[ $verbose == true ]]
     then
-        echo -e "\e[1;31m==> \e[97mGo installation not found. Please install the go package and try again."
+        echo -e "\e[1A\e[K\e[1;31m==> \e[97mlsblk command not found. Make sure you have the util-linux package installed."
         exit 2
     fi
 fi
 if [[ $verbose == true ]]
 then
-    echo -e "\e[1;32m==> \e[97mGo installation found."
+    echo -e "\e[1A\e[K\e[1;32m==> \e[97mlsblk found."
 
-    echo -e "  \e[1;34m-> \e[97mScanning disks."
+    echo -e "\e[1;32m==> \e[97mScanning disks."
+fi
+
+hasnvme=$(lsblk -A -N)
+
+hasscsi=$(lsblk -A -S)
+
+sleep 3
+
+if [[ $hasnvme != "" ]]
+then 
+
+    if [[ -f "/tmp/diskoutputnvme.json" ]]
+    then
+
+        rm /tmp/diskoutputnvme.json
+    fi
+    lsblk -A -J  -N > /tmp/diskoutputnvme.json
+
+fi
+
+if [[ $hasscsi != "" ]]
+then
+
+    if [[ -f "/tmp/diskoutputscsi.json" ]]
+    then
+
+        rm /tmp/diskoutputscsi.json
+    fi
+
+    lsblk -A -J  -S > /tmp/diskoutputscsi.json
+
 fi
 if [[ $verbose == true ]]
 then
-    echo -e "  \e[1;34m-> \e[97mLocating SSDs..."
+     echo -e "\e[1A\e[K\e[1;32m==> \e[97mDone. Launching executable..."
+     sleep 2
+     ./main/p-unlock
 fi  
-ssds=$(ls /dev | grep "sd[a-z]")
-
-if [[ $verbose == true ]]
-then
-     echo -e "\e[1;32m==> \e[97mDone."
-fi  
-
-if [[ $verbose == true ]]
-then
-    echo -e "  \e[1;34m-> \e[97mLocating HDDs..."
-fi  
-
-hdds=$(ls /dev | grep "hd[a-z]")
-
-if [[ $verbose == true ]]
-then
-     echo -e "\e[1;32m==> \e[97mDone."
-fi  
-
-
-
-for i in $ssds
-do
-    echo $i
-done
-
-for i in $hdds
-do
-    echo $i
-done
